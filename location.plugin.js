@@ -1,6 +1,6 @@
 /*
 	
-	Minus Location Plug-in v0.7 www.minus99.com - 2012
+	Minus Location Plug-in v1.0 www.minus99.com - 2012
 	
 */
 
@@ -15,22 +15,33 @@ var minusLoc = {
 		if(type == '#'){
 			window.location.hash = this.encoder(param);
 		}else if(type == '?'){
-			var a, b=false; 
+			var a, b = false, sep = '?';
 			
-			a = query.substring(query.indexOf("?")+1,query.length).split("&");
-			for(var i=0; i<a.length; i++){
-				if(a[i].indexOf(prop+"=") != -1){
-					b = a[i];
+			url = url.replace(hash, '');
+			prop = prop.split('|');
+			param = param.split('|');
+			
+			if(query != ''){
+				a = query.replace('?', '?@').substring(query.indexOf("?")+1,query.length+1).replace(/&/g, '&@').split("&");
+			}
+			
+			for(var e=0; e<prop.length; e++){
+				if(query != ''){
+					b = false;
+					for(var i=0; i<a.length; i++){
+						if(a[i].indexOf("@"+prop[e]+"=") != -1){
+							b = true;
+							url = url.replace(a[i].replace('@',''), prop[e]+'='+param[e]);
+						}
+					}
+				}else{
+					if(url.indexOf('?') == -1) sep = '?'; else sep = '&';
 				}
+				
+				if(!b) url = url+sep+prop[e]+'='+param[e];
 			}
-			if(b != false){
-				url = url.replace(b, prop+'='+param);
-			}else if(query != ''){
-				url = 'http://'+host+path+query+'&'+prop+'='+param+hash;
-			}else{
-				url = 'http://'+host+path+'?'+prop+'='+param+hash;	
-			}
-			window.location = url;
+			
+			window.location = url+hash;
 		}
 	},
 	get: function(type, param) {
