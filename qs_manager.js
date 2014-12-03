@@ -7,6 +7,7 @@
 var minusLoc = {
 	hash:window.location.hash, 
 	query:window.location.search,
+	url:window.location.href,
 	qto: function queryToObj(qs){
 		var qo = {};
 		
@@ -33,7 +34,7 @@ var minusLoc = {
 		return qs;
 	},
 	mput: function(prop, param){
-		var q = this.qto(this.query);
+		var q = this.qto(this.query), url = this.url.replace(this.hash, '');
 				prop = prop.split('|'),
 				param = param.split('|');
 				
@@ -54,18 +55,21 @@ var minusLoc = {
 			}
 		}
 
-		window.location = this.otq(q)+this.hash;
+		window.location = (this.query == '') ? url+this.otq(q)+this.hash : url.replace(this.query, this.otq(q))+this.hash;
 	},
 	put: function(prop, param) {
-		var q = this.qto(this.query);
+		var q = this.qto(this.query), url = this.url.replace(this.hash, '');
 				prop = prop.split('|'),
 				param = param.split('|');
 		
 		for(var i=0; i<prop.length; i++){
+			if(q[prop[i]] == undefined)
 				q[prop[i]] = param[i];
+			else
+				delete q[prop[i]];
 		}
 
-		window.location = this.otq(q)+this.hash;
+		window.location = (this.query == '') ? url+this.otq(q)+this.hash : url.replace(this.query, this.otq(q))+this.hash;
 	},
 	get: function(prop, string) {
 		var str = (string == undefined) ? this.query : string,
@@ -77,12 +81,11 @@ var minusLoc = {
 		return decodeURIComponent(result);
 	},
 	remove: function(prop){
-		var q = this.qto(this.query);
+		var q = this.qto(this.query), url = this.url.replace(this.hash, '');
 
 		if(q[prop] != undefined)
 			delete q[prop];
 		
-		window.location = this.otq(q)+this.hash;
-	},
-	encoder: encodeURIComponent
+		window.location = (this.query == '') ? url+this.otq(q)+this.hash : url.replace(this.query, this.otq(q))+this.hash;
+	}
 };
