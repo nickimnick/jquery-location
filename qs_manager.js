@@ -1,6 +1,6 @@
 /*
 	
-	Minus QS Manager v2.0 www.minus99.com - 2014
+	Minus QS Manager v2.1 www.minus99.com - 2014
 	
 */
 
@@ -8,6 +8,10 @@ var minusLoc = {
 	hash:window.location.hash, 
 	query:window.location.search,
 	url:window.location.href,
+	history: function(url){
+		var state = {"canBeAnything": true};
+		history.pushState(state, "", url);
+	},
 	qto: function queryToObj(qs){
 		var qo = {};
 		
@@ -33,8 +37,8 @@ var minusLoc = {
 		}
 		return qs;
 	},
-	mput: function(prop, param){
-		var q = this.qto(this.query), url = this.url.replace(this.hash, '');
+	mput: function(prop, param, history){
+		var q = this.qto(this.query), url = this.url.replace(this.hash, ''), rUrl;
 				prop = prop.split('|'),
 				param = param.split('|');
 				
@@ -54,10 +58,15 @@ var minusLoc = {
 				q[prop[i]] = param[i];
 			}
 		}
-
-		window.location = (this.query == '') ? url+this.otq(q)+this.hash : url.replace(this.query, this.otq(q))+this.hash;
+		
+		url = (this.query == '') ? url+this.otq(q)+this.hash : url.replace(this.query, this.otq(q))+this.hash;
+		
+		if(history)
+			this.history(url);
+		else
+			window.location = url;
 	},
-	put: function(prop, param) {
+	put: function(prop, param, history) {
 		var q = this.qto(this.query), url = this.url.replace(this.hash, '');
 				prop = prop.split('|'),
 				param = param.split('|');
@@ -69,7 +78,12 @@ var minusLoc = {
 				delete q[prop[i]];
 		}
 
-		window.location = (this.query == '') ? url+this.otq(q)+this.hash : url.replace(this.query, this.otq(q))+this.hash;
+		url = (this.query == '') ? url+this.otq(q)+this.hash : url.replace(this.query, this.otq(q))+this.hash;
+		
+		if(history)
+			this.history(url);
+		else
+			window.location = url;
 	},
 	get: function(prop, string) {
 		var str = (string == undefined) ? this.query : string,
@@ -80,12 +94,17 @@ var minusLoc = {
 
 		return decodeURIComponent(result);
 	},
-	remove: function(prop){
+	remove: function(prop, history){
 		var q = this.qto(this.query), url = this.url.replace(this.hash, '');
 
 		if(q[prop] != undefined)
 			delete q[prop];
 		
-		window.location = (this.query == '') ? url+this.otq(q)+this.hash : url.replace(this.query, this.otq(q))+this.hash;
+		url = (this.query == '') ? url+this.otq(q)+this.hash : url.replace(this.query, this.otq(q))+this.hash;
+		
+		if(history)
+			this.history(url);
+		else
+			window.location = url;
 	}
 };
