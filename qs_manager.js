@@ -4,7 +4,7 @@
 	
 */
 
-var minusLoc = {
+var qsManager = {
 	hash:window.location.hash, 
 	query:window.location.search,
 	url:window.location.href,
