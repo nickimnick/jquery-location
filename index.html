@@ -17,18 +17,25 @@
 
 <div class="imageHolder"><img border="0" src="image.jpg" /></div>
 <p>aljasdşlfsdşlknşsaldkcmşlsdkmnclksdnşcnkl</p>
-<a class="add" href="javascript:void(0);">test</a>
-<a class="remove" href="javascript:void(0);">test-2</a>
+<a class="add" href="javascript:void(0);">Add</a>
+<a class="remove" href="javascript:void(0);">Remove</a>
+<a class="log" href="javascript:void(0);">Log</a>
 
 <script type="text/javascript">
+
 $('a.add').click(function(){
 	
-	qsManager.put('test|up', 'osman|zirt', true);
+	qsManager.mput('test|up', 'osman|zirt', true);
 	
 });
 $('a.remove').click(function(){
 	
 	qsManager.remove('test', true);
+	
+});
+$('a.log').click(function(){
+	
+	console.log(qsManager.get('test'));
 	
 });
 	

@@ -1,6 +1,6 @@
 /*
 	
-	Minus QS Manager v2.1 www.minus99.com - 2014
+	QS Manager v2.2 - 2014
 	
 */
 
@@ -8,8 +8,14 @@ var qsManager = {
 	hash:window.location.hash, 
 	query:window.location.search,
 	url:window.location.href,
+	gdata: function(){
+		return sessionStorage.qs_manager;
+	},
+	sdata: function(data){
+		sessionStorage.qs_manager = data;
+	},
 	history: function(url){
-		var state = {"canBeAnything": true};
+		var state = {"qsManager": true};
 		history.pushState(state, "", url);
 	},
 	qto: function queryToObj(qs){
@@ -38,7 +44,7 @@ var qsManager = {
 		return qs;
 	},
 	mput: function(prop, param, history){
-		var q = this.qto(this.query), url = this.url.replace(this.hash, ''), rUrl;
+		var q = this.qto(this.gdata()), url = this.url.replace(this.hash, ''), rUrl;
 				prop = prop.split('|'),
 				param = param.split('|');
 				
@@ -61,13 +67,15 @@ var qsManager = {
 		
 		url = (this.query == '') ? url+this.otq(q)+this.hash : url.replace(this.query, this.otq(q))+this.hash;
 		
+		this.sdata(this.otq(q));
+		
 		if(history)
 			this.history(url);
 		else
 			window.location = url;
 	},
 	put: function(prop, param, history) {
-		var q = this.qto(this.query), url = this.url.replace(this.hash, '');
+		var q = this.qto(this.gdata()), url = this.url.replace(this.hash, '');
 				prop = prop.split('|'),
 				param = param.split('|');
 		
@@ -77,8 +85,10 @@ var qsManager = {
 			else
 				delete q[prop[i]];
 		}
-
+		
 		url = (this.query == '') ? url+this.otq(q)+this.hash : url.replace(this.query, this.otq(q))+this.hash;
+		
+		this.sdata(this.otq(q));
 		
 		if(history)
 			this.history(url);
@@ -86,21 +96,23 @@ var qsManager = {
 			window.location = url;
 	},
 	get: function(prop, string) {
-		var str = (string == undefined) ? this.query : string,
-				q = this.qto(str.substring(str.indexOf("?"), str.length)), result;
+		var str = (string == undefined) ? this.gdata() : string,
+				q = this.qto(str.substring(str.indexOf("?"), str.length)), result = null;
 		
 		if(q[prop] != undefined)
-			result = q[prop];
+			result = q[prop].toString();
 
 		return decodeURIComponent(result);
 	},
 	remove: function(prop, history){
-		var q = this.qto(this.query), url = this.url.replace(this.hash, '');
+		var q = this.qto(this.gdata()), url = this.url.replace(this.hash, '');
 
 		if(q[prop] != undefined)
 			delete q[prop];
 		
 		url = (this.query == '') ? url+this.otq(q)+this.hash : url.replace(this.query, this.otq(q))+this.hash;
+		
+		this.sdata(this.otq(q));
 		
 		if(history)
 			this.history(url);
@@ -108,3 +120,4 @@ var qsManager = {
 			window.location = url;
 	}
 };
+qsManager.sdata(qsManager.query);
