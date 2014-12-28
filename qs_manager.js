@@ -1,6 +1,6 @@
 /*
 	
-	QS Manager v2.2 - 2014
+	QS Manager v2.3 - 2014
 	
 */
 
@@ -106,9 +106,12 @@ var qsManager = {
 	},
 	remove: function(prop, history){
 		var q = this.qto(this.gdata()), url = this.url.replace(this.hash, '');
-
-		if(q[prop] != undefined)
-			delete q[prop];
+		prop = prop.split('|');
+		
+		for(var i=0; i<prop.length; i++){
+			if(q[prop[i]] != undefined)
+				delete q[prop[i]];
+		}
 		
 		url = (this.query == '') ? url+this.otq(q)+this.hash : url.replace(this.query, this.otq(q))+this.hash;
 		
