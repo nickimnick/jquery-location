@@ -1,6 +1,6 @@
 /*
 	
-	QS Manager v2.3 - 2014
+	QS Manager v2.4 - 2014
 	
 */
 
@@ -43,17 +43,22 @@ var qsManager = {
 		}
 		return qs;
 	},
-	mput: function(prop, param, history){
+	mput: function(prop, param, remove, history){
 		var q = this.qto(this.gdata()), url = this.url.replace(this.hash, ''), rUrl;
 				prop = prop.split('|'),
 				param = param.split('|');
+		
+		if(remove == undefined)
+			remove = true;
 				
 		for(var i=0; i<prop.length; i++){
 			if(q[prop[i]] != undefined){
 				sParam = param[i].split(",");
 				for(var j=0; j<sParam.length; j++){
 					if(q[prop[i]].indexOf(sParam[j]) != -1){
-						q[prop[i]].splice(q[prop[i]].indexOf(sParam[j]), 1);
+						if(remove)
+							q[prop[i]].splice(q[prop[i]].indexOf(sParam[j]), 1);
+							
 						if(q[prop[i]] == '')
 							delete q[prop[i]];
 					}else{
