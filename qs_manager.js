@@ -1,6 +1,6 @@
 /*
 	
-	QS Manager v2.5 - 2014
+	QS Manager v2.5.1 - 2014
 	
 */
 
@@ -79,14 +79,18 @@ var qsManager = {
 		else
 			window.location = url;
 	},
-	put: function(prop, param, history) {
+	put: function(prop, param, remove, history) {
 		var q = this.qto(this.gdata()), url = this.url.replace(this.hash, '');
 				prop = prop.split('|'),
 				param = param.split('|');
 		
+		if(remove == undefined)
+			remove = true;
+		
 		for(var i=0; i<prop.length; i++){
 			if(q[prop[i]] != undefined && q[prop[i]] == param[i])
-				delete q[prop[i]];
+				if(remove)
+					delete q[prop[i]];
 			else
 				q[prop[i]] = param[i];
 		}
