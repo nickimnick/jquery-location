@@ -1,6 +1,6 @@
 /*
 	
-	QS Manager v2.4 - 2014
+	QS Manager v2.5 - 2014
 	
 */
 
@@ -85,10 +85,10 @@ var qsManager = {
 				param = param.split('|');
 		
 		for(var i=0; i<prop.length; i++){
-			if(q[prop[i]] == undefined)
-				q[prop[i]] = param[i];
-			else
+			if(q[prop[i]] != undefined && q[prop[i]] == param[i])
 				delete q[prop[i]];
+			else
+				q[prop[i]] = param[i];
 		}
 		
 		url = (this.query == '') ? url+this.otq(q)+this.hash : url.replace(this.query, this.otq(q))+this.hash;
