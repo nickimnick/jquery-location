@@ -1,6 +1,6 @@
 /*
 	
-	QS Manager v2.5.1 - 2014
+	QS Manager v2.6 - 2014
 	
 */
 
@@ -104,14 +104,26 @@ var qsManager = {
 		else
 			window.location = url;
 	},
-	get: function(prop, string) {
-		var str = (string == undefined) ? this.gdata() : string,
-				q = this.qto(str.substring(str.indexOf("?"), str.length)), result = null;
+	get: function(prop, string, obj) {
+		var str = (string == undefined || string == null || !string) ? this.gdata() : string,
+				q = this.qto(str.substring(str.indexOf("?"), str.length)), sep;
+		prop = prop.split('|');
 		
-		if(q[prop] != undefined)
-			result = q[prop].toString();
+		result = (obj) ? {} : '';
+		
+		for(var i=0; i<prop.length; i++){
+			sep = (i == 0) ? '' : '|';
+			
+			if(q[prop[i]] != undefined){
+				if(obj)
+					result[prop[i]] = q[prop[i]];
+				else
+					result += sep+q[prop[i]].toString();
+				
+			}
+		}
 
-		return decodeURIComponent(result);
+		return (obj) ? result : decodeURIComponent(result);
 	},
 	remove: function(prop, history){
 		var q = this.qto(this.gdata()), url = this.url.replace(this.hash, '');
