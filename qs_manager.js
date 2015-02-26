@@ -1,6 +1,6 @@
 /*
 	
-	QS Manager v2.6 - 2014
+	QS Manager v2.7 - 2014
 	
 */
 
@@ -88,13 +88,12 @@ var qsManager = {
 			remove = true;
 		
 		for(var i=0; i<prop.length; i++){
-			if(q[prop[i]] != undefined && q[prop[i]] == param[i])
-				if(remove)
+			if(q[prop[i]] != undefined && q[prop[i]] == param[i] && remove)
 					delete q[prop[i]];
 			else
 				q[prop[i]] = param[i];
 		}
-		
+		console.log(q);
 		url = (this.query == '') ? url+this.otq(q)+this.hash : url.replace(this.query, this.otq(q))+this.hash;
 		
 		this.sdata(this.otq(q));
@@ -106,14 +105,17 @@ var qsManager = {
 	},
 	get: function(prop, string, obj) {
 		var str = (string == undefined || string == null || !string) ? this.gdata() : string,
-				q = this.qto(str.substring(str.indexOf("?"), str.length)), sep;
+				q = this.qto(str.substring(str.indexOf("?"), str.length)), sep, objLen = 0;
 		prop = prop.split('|');
 		
 		result = (obj) ? {} : '';
 		
-		for(var i=0; i<prop.length; i++){
-			sep = (i == 0) ? '' : '|';
+		for(var e in q)
+			objLen++;
 			
+		for(var i=0; i<prop.length; i++){
+			sep = (i == 0 || objLen < 2) ? '' : '|';
+
 			if(q[prop[i]] != undefined){
 				if(obj)
 					result[prop[i]] = q[prop[i]];
